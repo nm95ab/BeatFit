@@ -78,7 +78,7 @@ def process_map(filepath, output_filepath=None):
         # --- FITNESS INTENSITY SETTINGS ---
         # Lower these numbers to make the script MUCH more aggressive
         wall_duration = 1.25  # How long you hold the squat (1.5 beats)
-        entry_buffer = 0.25   # Beats to wait after the last note before wall appears
+        entry_buffer = 0.5   # Beats to wait after the last note before wall appears
         exit_buffer = 0.75  # Beats to give you time to see the next note after the wall
         
         min_required_gap = entry_buffer + wall_duration + exit_buffer

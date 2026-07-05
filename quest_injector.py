@@ -124,7 +124,7 @@ def main():
                     print(f"{idx}. {song}")
                 show_list = False
 
-            user_input = input("\nSelect a number, type a substring to filter, 'all' to reset, 'l' to list, or 'q' to quit: ").strip()
+            user_input = input("\nSelect a number, type a substring to filter, 'del <num>' to delete, 'all' to reset, 'l' to list, or 'q' to quit: ").strip()
 
             if not user_input:
                 continue
@@ -141,6 +141,34 @@ def main():
                 displayed_songs = songs
                 show_list = True
                 continue
+
+            # Check for delete command
+            if user_input.lower().startswith('del ') or user_input.lower().startswith('d '):
+                try:
+                    parts = user_input.split()
+                    if len(parts) >= 2:
+                        del_idx = int(parts[1])
+                        if 1 <= del_idx <= len(displayed_songs):
+                            song_to_delete = displayed_songs[del_idx - 1]
+                            confirm = input(f"Are you sure you want to completely delete '{song_to_delete}' from your Quest? (y/n): ").strip().lower()
+                            if confirm == 'y':
+                                print(f"Deleting '{song_to_delete}'...")
+                                remote_song_folder = f"{quest_base_path}{song_to_delete}/"
+                                run_adb_command(["shell", "rm", "-rf", remote_song_folder])
+                                if song_to_delete in songs:
+                                    songs.remove(song_to_delete)
+                                if song_to_delete in displayed_songs:
+                                    displayed_songs.remove(song_to_delete)
+                                print("Song deleted successfully.")
+                                show_list = True
+                            else:
+                                print("Deletion cancelled.")
+                            continue
+                        else:
+                            print("Invalid song number to delete.")
+                            continue
+                except ValueError:
+                    pass
 
             try:
                 choice = int(user_input)
