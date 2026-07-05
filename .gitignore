@@ -1,0 +1,7 @@
+__pycache__/
+*.dat
+.DS_Store
+*.zip
+*.egg
+*.jpg
+*.png
