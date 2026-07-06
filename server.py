@@ -405,7 +405,7 @@ def process_map():
         
     difficulties = data.get("difficulties", ["Normal", "Hard", "Expert", "ExpertPlus"])
     modes = data.get("modes", ["Standard"])
-    events = data.get("events", ["DotBlocks", "Obstacles", "Bombs"])
+    events = data.get("events", ["Obstacles"])
     push_to_quest = bool(data.get("push_to_quest", False))
     
     task_id = str(uuid.uuid4())
