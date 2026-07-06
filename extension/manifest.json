@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "BeatFit Creator",
+  "version": "1.0",
+  "description": "Send YouTube songs to BeatSage + FitBeat and deploy to Meta Quest directly from your browser.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://localhost:5000/*",
+    "*://*.youtube.com/*",
+    "*://youtu.be/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/watch*",
+        "*://youtu.be/*"
+      ],
+      "js": ["content.js"]
+    }
+  ]
+}

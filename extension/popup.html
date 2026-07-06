@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeatFit Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="logo-icon">⚡</span>
+        <h1 class="logo-text">BeatFit <span class="accent-text">Creator</span></h1>
+      </div>
+      <div id="quest-badge" class="connection-badge status-checking">
+        <span class="badge-dot"></span>
+        <span class="badge-text">Checking Quest USB...</span>
+      </div>
+    </header>
+
+    <!-- Error/Warning Overlay (Hidden by default) -->
+    <div id="wrong-page-view" class="view-panel hidden">
+      <div class="error-card">
+        <div class="error-icon">📺</div>
+        <h3>No YouTube Video Detected</h3>
+        <p>Please open a YouTube video watch page to generate a workout level.</p>
+        <a href="https://www.youtube.com" target="_blank" class="btn btn-secondary">Go to YouTube</a>
+      </div>
+    </div>
+
+    <!-- Main Generation View -->
+    <div id="main-view" class="view-panel">
+      <!-- Song Metadata Card -->
+      <div class="song-card glass">
+        <div class="song-details">
+          <div class="meta-row">
+            <span class="meta-label">Song Title</span>
+            <div id="song-title" class="meta-value loading-placeholder">Detecting song title...</div>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Channel/Artist</span>
+            <div id="song-artist" class="meta-value loading-placeholder">Detecting channel...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings / Config -->
+      <div class="settings-section">
+        <h3>Workout Options</h3>
+        
+        <div class="setting-group">
+          <span class="group-label">Difficulties to Generate</span>
+          <div class="checkbox-grid">
+            <label class="checkbox-container">
+              <input type="checkbox" id="diff-easy" value="Easy">
+              <span class="checkmark"></span>
+              Easy
+            </label>
+            <label class="checkbox-container">
+              <input type="checkbox" id="diff-normal" value="Normal">
+              <span class="checkmark"></span>
+              Normal
+            </label>
+            <label class="checkbox-container">
+              <input type="checkbox" id="diff-hard" value="Hard" checked>
+              <span class="checkmark"></span>
+              Hard
+            </label>
+            <label class="checkbox-container">
+              <input type="checkbox" id="diff-expert" value="Expert" checked>
+              <span class="checkmark"></span>
+              Expert
+            </label>
+            <label class="checkbox-container">
+              <input type="checkbox" id="diff-expertplus" value="ExpertPlus" checked>
+              <span class="checkmark"></span>
+              Expert+
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-group flex-row justify-between align-center">
+          <div class="toggle-info">
+            <span class="group-label">Deploy Directly to Quest</span>
+            <p class="sub-label">Automatically pushes map files via USB/ADB</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-quest" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="action-footer">
+        <button id="btn-generate" class="btn btn-primary btn-glow">
+          <span class="btn-text">Generate Workout Map</span>
+          <span class="btn-shimmer"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Process / Progress View (Hidden by default) -->
+    <div id="progress-view" class="view-panel hidden">
+      <div class="progress-container glass">
+        <!-- Progress Circular/Linear Indicator -->
+        <div class="progress-header">
+          <span id="progress-percentage">0%</span>
+          <span id="progress-status-title">Queued...</span>
+        </div>
+        <div class="progress-bar-track">
+          <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
+        </div>
+        <p id="progress-detail-message" class="detail-message">Connecting to local server companion...</p>
+      </div>
+
+      <!-- Progress Steps Checklist -->
+      <div class="steps-checklist">
+        <div id="step-download" class="step-item">
+          <div class="step-icon"></div>
+          <span class="step-text">Download YouTube Audio</span>
+        </div>
+        <div id="step-upload" class="step-item">
+          <div class="step-icon"></div>
+          <span class="step-text">Upload to BeatSage AI</span>
+        </div>
+        <div id="step-mapping" class="step-item">
+          <div class="step-icon"></div>
+          <span class="step-text">AI Level Mapping</span>
+        </div>
+        <div id="step-fitbeat" class="step-item">
+          <div class="step-icon"></div>
+          <span class="step-text">Inject fitbeat.py Obstacles</span>
+        </div>
+        <div id="step-deploy" class="step-item">
+          <div class="step-icon"></div>
+          <span class="step-text">Install onto Meta Quest</span>
+        </div>
+      </div>
+
+      <!-- Finished view or error fallback -->
+      <div id="finished-actions" class="finished-actions hidden">
+        <a id="btn-download-zip" href="#" target="_blank" class="btn btn-secondary">
+          <span>Download Level ZIP</span>
+        </a>
+        <button id="btn-restart" class="btn btn-secondary">
+          <span>Create Another Map</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
