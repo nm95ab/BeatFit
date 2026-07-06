@@ -81,11 +81,130 @@ async function initViews() {
   // Action listeners
   btnGenerate.addEventListener("click", startGeneration);
   btnRestart.addEventListener("click", resetToMainView);
+
+  // Tabs Navigation implementation
+  const btnTabCreator = document.getElementById("btn-tab-creator");
+  const btnTabTasks = document.getElementById("btn-tab-tasks");
+  const tasksView = document.getElementById("tasks-view");
+  const btnRefreshTasks = document.getElementById("btn-refresh-tasks");
+  let activeCreatorPanel = mainView;
+
+  btnTabCreator.addEventListener("click", () => {
+    btnTabCreator.classList.add("active");
+    btnTabTasks.classList.remove("active");
+    tasksView.classList.add("hidden");
+    
+    if (activeCreatorPanel) {
+      activeCreatorPanel.classList.remove("hidden");
+    } else {
+      mainView.classList.remove("hidden");
+    }
+  });
+
+  btnTabTasks.addEventListener("click", () => {
+    btnTabTasks.classList.add("active");
+    btnTabCreator.classList.remove("active");
+    
+    const progressView = document.getElementById("progress-view");
+    if (!mainView.classList.contains("hidden")) {
+      activeCreatorPanel = mainView;
+    } else if (!progressView.classList.contains("hidden")) {
+      activeCreatorPanel = progressView;
+    } else if (!wrongPageView.classList.contains("hidden")) {
+      activeCreatorPanel = wrongPageView;
+    }
+    
+    mainView.classList.add("hidden");
+    progressView.classList.add("hidden");
+    wrongPageView.classList.add("hidden");
+    
+    tasksView.classList.remove("hidden");
+    loadTasks();
+  });
+
+  btnRefreshTasks.addEventListener("click", loadTasks);
 }
 
 function showErrorView() {
   document.getElementById("main-view").classList.add("hidden");
   document.getElementById("wrong-page-view").classList.remove("hidden");
+}
+
+async function loadTasks() {
+  const container = document.getElementById("tasks-list-container");
+  container.innerHTML = `<div class="no-tasks">Loading tasks...</div>`;
+  
+  try {
+    const res = await fetch(`${SERVER_URL}/status`);
+    if (!res.ok) throw new Error("Server error");
+    const tasksList = await res.json();
+    
+    if (!tasksList || tasksList.length === 0) {
+      container.innerHTML = `<div class="no-tasks">No songs are currently processing.</div>`;
+      return;
+    }
+    
+    // Sort tasks by created_at descending (latest first)
+    tasksList.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+    
+    container.innerHTML = "";
+    tasksList.forEach(task => {
+      const card = document.createElement("div");
+      card.className = "task-card";
+      
+      const isComplete = task.status === "completed";
+      const isFailed = task.status === "failed";
+      const isRunning = !isComplete && !isFailed;
+      
+      let progressDisplay = "";
+      if (isRunning) {
+        progressDisplay = `
+          <div class="task-progress-container" style="margin-top: 6px;">
+            <div class="task-progress-row" style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-secondary); margin-bottom: 2px;">
+              <span>${task.message || 'Processing...'}</span>
+              <span>${task.progress}%</span>
+            </div>
+            <div class="task-progress-bar" style="height: 4px; background: rgba(255, 255, 255, 0.05); border-radius: 2px; overflow: hidden;">
+              <div class="task-progress-fill" style="width: ${task.progress}%; height: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); transition: width 0.3s ease;"></div>
+            </div>
+          </div>
+        `;
+      } else {
+        progressDisplay = `
+          <div class="task-progress-container" style="margin-top: 6px;">
+            <div class="task-progress-row" style="font-size: 10px; color: var(--text-muted);">
+              <span>${task.message || (isComplete ? 'Finished' : 'Error')}</span>
+            </div>
+          </div>
+        `;
+      }
+      
+      let actionDisplay = "";
+      if (isComplete && task.download_url) {
+        actionDisplay = `
+          <div class="task-actions" style="display: flex; justify-content: flex-end; margin-top: 8px;">
+            <a href="${task.download_url}" target="_blank" class="task-download-btn" style="font-size: 11px; color: var(--accent-cyan); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 4px;">
+              📥 Download ZIP
+            </a>
+          </div>
+        `;
+      }
+      
+      card.innerHTML = `
+        <div class="task-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 2px;">
+          <span class="task-title" style="font-weight: 600; font-size: 13px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;" title="${task.song_title || 'Unknown Title'}">${task.song_title || 'Unknown Song'}</span>
+          <span class="task-status-badge ${task.status}" style="font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: capitalize;">${task.status}</span>
+        </div>
+        <div class="task-artist" style="font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${task.song_artist || 'Unknown Artist'}">${task.song_artist || 'Unknown Artist'}</div>
+        ${progressDisplay}
+        ${actionDisplay}
+      `;
+      
+      container.appendChild(card);
+    });
+  } catch (err) {
+    container.innerHTML = `<div class="no-tasks" style="color: var(--accent-magenta)">Failed to load task status. Make sure server.py is running.</div>`;
+  }
 }
 
 // Check Quest ADB Status from local server

@@ -23,6 +23,12 @@
       </div>
     </header>
 
+    <!-- Tabs Navigation -->
+    <div class="tabs-nav">
+      <button id="btn-tab-creator" class="tab-btn active">⚡ Creator</button>
+      <button id="btn-tab-tasks" class="tab-btn">📋 Status/Tasks</button>
+    </div>
+
     <!-- Error/Warning Overlay (Hidden by default) -->
     <div id="wrong-page-view" class="view-panel hidden">
       <div class="error-card">
@@ -151,6 +157,17 @@
         <button id="btn-restart" class="btn btn-secondary">
           <span>Create Another Map</span>
         </button>
+      </div>
+    </div>
+
+    <!-- Background Tasks Status Panel -->
+    <div id="tasks-view" class="view-panel hidden">
+      <div class="tasks-header-row">
+        <h3>Processing Status</h3>
+        <button id="btn-refresh-tasks" class="btn-refresh">🔄 Refresh</button>
+      </div>
+      <div id="tasks-list-container" class="tasks-list">
+        <div class="no-tasks">No songs are currently processing.</div>
       </div>
     </div>
   </div>
