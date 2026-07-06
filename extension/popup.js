@@ -139,16 +139,19 @@ async function loadTasks() {
     if (!res.ok) throw new Error("Server error");
     const tasksList = await res.json();
     
-    if (!tasksList || tasksList.length === 0) {
+    // Filter out completed and failed tasks (show only in-progress songs)
+    const inProgressTasks = tasksList.filter(task => task.status !== "completed" && task.status !== "failed");
+    
+    if (inProgressTasks.length === 0) {
       container.innerHTML = `<div class="no-tasks">No songs are currently processing.</div>`;
       return;
     }
     
     // Sort tasks by created_at descending (latest first)
-    tasksList.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+    inProgressTasks.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
     
     container.innerHTML = "";
-    tasksList.forEach(task => {
+    inProgressTasks.forEach(task => {
       const card = document.createElement("div");
       card.className = "task-card";
       
