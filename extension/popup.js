@@ -1,6 +1,6 @@
 // BeatFit Creator Extension Popup Script
 
-const SERVER_URL = "http://localhost:5000";
+const SERVER_URL = "http://localhost:5001";
 let activeTaskId = null;
 let pollInterval = null;
 let currentYoutubeUrl = "";

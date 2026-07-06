@@ -9,7 +9,7 @@
     "tabs"
   ],
   "host_permissions": [
-    "http://localhost:5000/*",
+    "http://localhost:5001/*",
     "*://*.youtube.com/*",
     "*://youtu.be/*"
   ],

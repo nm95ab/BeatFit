@@ -389,7 +389,7 @@ def index():
                 <span class="dot"></span>
                 <span>Online & Ready</span>
             </div>
-            <p>The companion server is running successfully on port 5000 and listening for requests from the Chrome Extension.</p>
+            <p>The companion server is running successfully on port 5001 and listening for requests from the Chrome Extension.</p>
         </div>
     </body>
     </html>
@@ -483,9 +483,9 @@ if __name__ == "__main__":
     print("--------------------------------------------------")
     print(f"Workspace Directory: {BASE_DIR}")
     print(f"Processing Temp Directory: {TEMP_DIR}")
-    print("Running on http://localhost:5000")
+    print("Running on http://localhost:5001")
     print("Press Ctrl+C to quit.")
     print("--------------------------------------------------")
     
-    # Run server locally on port 5000
-    app.run(host="localhost", port=5000, debug=True, use_reloader=False)
+    # Run server locally on port 5001
+    app.run(host="localhost", port=5001, debug=True, use_reloader=False)
